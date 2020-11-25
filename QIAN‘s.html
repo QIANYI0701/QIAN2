@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<script>
+
+var initial_text = "<b>Hi Salma! Thanks for your contribution to forest protection!</b><br>You have planted 0 trees and you can get $0. Enter menu to start!";
+var report_record = [];
+var chat_text = initial_text;
+var chat_proto = "Write your dialog/questions here; one step at a line.";
+
+var chat_prompt = [];
+var chat_answ = [];
+
+var chat_mode = false;
+var prompt_id = 0;
+
+
+function popupbox(text) {
+   alert(text);
+   return "";
+}
+
+
+function cls() {
+   chat_text = initial_text;
+   $("#chat_output").html(chat_text);
+}
+
+
+function help() {
+   return('<br/><b>Type <code>menu to see what can you do.</code></b>');
+}
+
+
+function function4() {
+   // An example of a Javascript function offering some interactivity
+   alert("You clicked the button of menu item 4.");
+}
+
+
+
+function selBtn(button_id) {
+   $("#command").val(button_id);
+}
+
+function goodCar() {
+   chat_answ[prompt_id] = $("#car").val();
+   $("#command").val($("#car").val());
+
+}
+
+
+
+function basic_chat() {
+   chat_prompt = ["What is your first name?", "What is your last name?"];
+   chat_prompt.push("Do you want to correct something? (Type 'prev' to go to previous question)");
+   chat_prompt.push("Thank you! The dialog is over now.<br/><small>(You can create your own 'basic chat' by downloading and editing this script)</small>");
+   chat_answ = [];
+   chat_answ.fill(' ');
+}
+
+
+function advanced_chat() {
+   chat_text = "<b>Some advanced UI elements</b>";   // we need to clear the screen for unintended double UI elements
+   chat_prompt = [ "Select one:<br/> <button onclick='selBtn(1)'>1</button> <button onclick='selBtn(2)'>2</button> <button onclick='selBtn(3)'>3</button>",
+      "What is a good car? <br/> <select onchange='goodCar()' id='car'> <option value='Saab'>Saab</option><option value='Volvo'>Volvo</option><option value='Audi'>Audi</option><option value='BMW'>BMW</option></select> ",
+      "Thank you!"];
+   chat_answ = [];
+   chat_answ.fill(' ');
+}
+
+
+function import_chat() {
+   chat_proto = $('#chatLines').val();
+   chat_prompt = [];
+   chat_prompt = $('#chatLines').val().split('\n');
+   chat_answ = [];
+   chat_answ.fill(' ');
+   alert("Chat uploaded! You can now test it with the 'chat' command.");
+}
+
+function chat(command) {
+   if (command == "prev") { prompt_id = prompt_id - 2; }  // Why? See http://hcibib.org/sam/3.html guideline 3.0/1
+   if (prompt_id > 0) { chat_answ[prompt_id - 1] = command; }
+   chat_text = chat_text + "<br/>" + chat_prompt[prompt_id];
+   prompt_id = prompt_id + 1;
+   if (prompt_id == chat_prompt.length) { chat_answ[chat_prompt.length - 1] = ' '; chat_mode = false; }
+}
+
+
+function create_chat() {
+   chat_text = "<br/><b>Create your own chat</b><br/><textarea rows='10' cols='50' id='chatLines'>" + chat_proto + "</textarea>";
+   chat_text = chat_text + "<br/><button onclick='import_chat()'>Upload chat</button>";
+}
+
+
+function print(what_to_print) {
+   for (var i = 0; i < chat_prompt.length; i++) {
+       chat_text = chat_text + "<br/>";
+       if (what_to_print == "questions" || what_to_print == "all" || what_to_print == "") {
+          chat_text = chat_text + "<strong>" + chat_prompt[i] + "</strong> "
+       }
+       if (what_to_print == "answers" || what_to_print == "all" || what_to_print == "") {
+          chat_text = chat_text + chat_answ[i];
+       }
+   }
+}
+
+
+function menu() {
+   // The menu (instructions) for the CLI is defined here
+   return('<br><b>Functions: 1</b>) Add Record <b>2</b>) Update Status <b>3</b>) Show Report<br><b>Enter number to execute the function.</b>');
+}
+
+
+function add_record() {
+   var region = prompt("Please enter the region num of planting:", "Here");
+   if (region != null) {
+      chat_text =  "<br/>" + " Region Num: " + region;
+      alert("Enter "+region+" successfully");
+      return add_tree_type(chat_text);
+   }
+
+}
+
+function add_tree_type(){
+  var tree_type = prompt("Please choose the type of tree: a) Medicinal Tree b) Fruit Tree c) Fuelwood", "Here");
+  if (tree_type == "a") {
+     chat_text =  chat_text + "<br/>" + " Tree Type: Medicinal Tree" ;
+     alert("Choose Medicinal Tree successfully");
+     return add_tree_amount(chat_text);
+  }
+  if (tree_type == "b") {
+   chat_text =  chat_text + "<br/>" + " Tree Type: Fruit Tree" ;
+   alert("Choose Fruit Tree successfully");
+   return add_tree_amount(chat_text);
+  }
+  if(tree_type == "c") {
+   chat_text =  chat_text + "<br/>" + " Tree Type: Fuelwood" ;
+   alert("Choose Fuelwood successfully");
+   return add_tree_amount(chat_text);
+   }
+   else {
+     chat_text = "You can only enter a/b/c";
+     return(chat_text);
+   }
+}
+
+function add_tree_amount(){
+  var tree_amount = prompt("Please enter the amount of tree: ", "Here");
+  if (tree_amount != null) {
+     chat_text =  chat_text + "<br/>" + " Tree Amount: " + tree_amount;
+     alert("Enter " + tree_amount + " successfully");
+     return add_tree_status(chat_text);
+  }
+}
+
+function add_tree_status(){
+  var tree_status = prompt("Please choose the status of tree: a) Seed b) Germination Tree c) Seedling d)Adult Plant e)Wrong Info", "Here");
+  if (tree_status == "a") {
+     chat_text =  chat_text + "<br/>" + " Tree Status: Seed" ;
+     report_record = chat_text;
+     alert("Choose Seed successfully"+report_record);
+     return (chat_text);
+  }
+  if (tree_status == "b") {
+   chat_text =  chat_text + "<br/>" + " Tree Status: Germination Tree" ;
+   alert("Choose Germination Tree successfully");
+   return (chat_text);
+  }
+  if(tree_status == "c") {
+   chat_text =  chat_text + "<br/>" + " Tree Status: Seedling" ;
+   alert("Choose Seedling successfully");
+   return (chat_text);
+   }
+   if(tree_status == "d") {
+    chat_text =  chat_text + "<br/>" + " Tree Status: Adult Plant " ;
+    alert("Choose Adult Plant successfully");
+    return (chat_text);
+    }
+    if(tree_status == "e") {
+     chat_text =  chat_text + "<br/>" + " Tree Status: Wrong Info " ;
+     alert("Choose Wrong Info successfully");
+     return (chat_text);
+     }
+   else {
+     chat_text = "You can only enter a/b/c";
+     return(chat_text);
+   }
+}
+
+
+function main_loop(command) {
+
+    chat_text = chat_text + "<br/>> " + command;
+
+    var cmd = command.split(" ");
+
+    if (chat_mode) {
+       chat(command);
+    } else {
+
+    switch (cmd[0])
+        {
+            case "menu":
+                chat_text = chat_text + " " + menu();
+                break;
+
+            case "help":
+                chat_text = chat_text + " " + help();
+                break;
+
+            case "?":
+                chat_text = chat_text + " " + help();
+                break;
+
+            case "1":
+                chat_text = chat_text + " " + add_record();
+                break;
+
+            case "2":
+                chat_text = chat_text + "<br/><small>This is the tiny output from function #2.</small>";
+                break;
+
+            case "3":
+                alert("Function #3 results in a javascript popup box!");
+                chat_text = chat_text + "<br/><b>Wow! That popup box was some interactivity, wasn't it?</b>";
+                break;
+
+            case "4":
+                // We create a bit more extensive UI here
+                chat_text = chat_text + '<br/>Some buttons for interaction using the mouse:';
+                chat_text = chat_text + '<br/><button>No effect here.</button> ';
+                chat_text = chat_text + '<button onclick="function4()">Click me!</button> ';
+                chat_text = chat_text + '<button onclick="askMyName()">Your name?</button>';
+                break;
+
+            case "chat":
+                // start or restart chat
+                prompt_id = 0;
+                chat_mode = true;
+                chat(command);
+                break;;
+
+            case "adv":
+                // start or restart advanced chat
+                advanced_chat();
+                prompt_id = 0;
+                chat_mode = true;
+                chat(command);
+                break;;
+
+            case "create":
+                create_chat();
+                break;
+
+            case "print":
+                if (cmd[1] == null) {
+                   chat_text = chat_text + "<br/>Please specify: print <b>questions</b>, <b>answers</b>, or <b>all</b>?";
+                } else {
+                  print(cmd[1]);
+                }
+                break;
+
+            case "popup":
+                chat_text = chat_text + " " + popupbox(cmd);
+                break;
+
+            case "cls":
+                cls();
+                break;
+
+            case "clear":
+                cls();
+                break;
+
+            default:
+                chat_text = chat_text + " " + help();
+                break;
+        }
+    }
+
+    $("#chat_output").html(chat_text);
+
+    return;
+}
+
+
+
+$(document).ready(function(){
+
+   $("#chat_output").html(chat_text);
+
+   $("#command_button").click(function(){
+       main_loop($("#command").val());
+       $("#command").val('');
+   });
+
+   $("#command").keyup(function(event) {
+       if (event.keyCode === 13) {
+            $("#command_button").click();
+       }
+   });
+
+   $("#restart").click(function(){
+      cls();
+   });
+
+   basic_chat();
+
+});
+
+
+</script>
+</head>
+
+
+<body>
+
+<div class="w3-container">
+
+<div class="w3-border w3-panel">
+
+<div id="chat_div">
+   <p id="chat_output">
+
+   </p>
+</div>
+
+</div>
+
+   <p>
+   <span>> </span><input type="text" id="command">
+   <button id="command_button">Submit</button>
+   <button id="restart">Clear</button>
+   </p>
+
+</body>
+</html>
